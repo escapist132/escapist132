@@ -1,0 +1,55 @@
+#include <iostream>
+#include <string>
+#include <ctime>
+#include <windows.h>
+#include <cstdlib>
+  std::string ships[4] = { "Линкор", "Крейсер", "Эсминец", "Торпедный катер" };
+	std::srand(unsigned(std::time(0)));
+	int requiredNumberOfHits = 0;
+	std::cout << "\n" << "РАЗМЕЩЕНИЕ" << "\n" << "\n";
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 1; j < i + 2; j++)
+		{
+			int x, y;
+			int sideOfTheWorld;
+			do
+			{
+				x = std::rand() % 10;
+				y = std::rand() % 10;
+				sideOfTheWorld = std::rand() % 4 + 1;
+			} while (Check(i, white, x, y, sideOfTheWorld, false));
+
+			Locate(i, white, x, y, sideOfTheWorld);
+			requiredNumberOfHits += 4 - i;
+		}
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 1; j < i + 2; j++)
+		{
+			int x, y;
+			int sideOfTheWorld;
+			do
+			{
+				std::cout << ships[i] << " № " << j << "\n";
+				std::cout << "Координаты кормы" << "\n";
+
+				getCoordinates(horizontal, vertical, y, x);
+				do
+				{
+					std::cout << "Носом на север - 1, восток - 2, юг - 3, запад - 4: ";
+					std::cin >> sideOfTheWorld;
+					if (std::cin.fail())
+					{
+						std::cin.clear();
+					}
+					std::cin.ignore(32768, '\n');
+				} while (!(1 <= sideOfTheWorld && sideOfTheWorld <= 4));
+			} while (Check(i, black, x, y, sideOfTheWorld));
+
+			Locate(i, black, x, y, sideOfTheWorld);
+
+			ShowOcean(horizontal, vertical, black);
+		}
+	}
